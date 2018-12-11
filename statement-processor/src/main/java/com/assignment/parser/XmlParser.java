@@ -10,6 +10,9 @@ import javax.xml.stream.events.Attribute;
 import javax.xml.stream.events.EndElement;
 import javax.xml.stream.events.StartElement;
 import javax.xml.stream.events.XMLEvent;
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileReader;
 import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
@@ -25,13 +28,13 @@ public class XmlParser extends InputParser {
     private static final String END_BALANCE = "endBalance";
 
     @Override
-    public List<StatementRecord> parseAndValidate(String fileName) {
+    public List<StatementRecord> parseAndValidate(File file) {
 
         List<StatementRecord> statementRecords = new ArrayList<>();
         StatementRecord statementRecord = null;
         XMLInputFactory xmlInputFactory = XMLInputFactory.newInstance();
         try {
-            XMLEventReader xmlEventReader = xmlInputFactory.createXMLEventReader(this.getClass().getResourceAsStream(fileName));
+            XMLEventReader xmlEventReader = xmlInputFactory.createXMLEventReader(new FileReader(file));
             while (xmlEventReader.hasNext()) {
                 XMLEvent xmlEvent = xmlEventReader.nextEvent();
                 if (xmlEvent.isStartElement()) {
@@ -71,13 +74,16 @@ public class XmlParser extends InputParser {
                 if (xmlEvent.isEndElement()) {
                     EndElement endElement = xmlEvent.asEndElement();
                     if (endElement.getName().getLocalPart().equals(RECORD)) {
+
+                        //validate the input record before adding it to the list
                         validateReferenceNumber(statementRecords, statementRecord);
                         validateEndBalance(statementRecord);
+
                         statementRecords.add(statementRecord);
                     }
                 }
             }
-        } catch (XMLStreamException e) {
+        } catch (FileNotFoundException | XMLStreamException e) {
             e.printStackTrace();
         }
         return statementRecords;

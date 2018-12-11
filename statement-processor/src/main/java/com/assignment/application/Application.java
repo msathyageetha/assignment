@@ -1,14 +1,15 @@
 package com.assignment.application;
 
+import java.io.File;
+
 public class Application {
 
     public static void main(String[] args) {
-      /*  String file = null;//args[0];
-        String fileType = null;// args[1];
-        if (file == null || fileType == null) {
-            throw new IllegalArgumentException("File name and type are mandatory to process the statement");
-        }*/
+        if (args.length == 0) {
+            throw new IllegalArgumentException("Input File is mandatory !!!");
+        }
+        File inFile = new File(args[0]);
         StatementRecordProcessor processor = new StatementRecordProcessor();
-        processor.processStatement("/records.xml");
+        processor.processStatement(inFile);
     }
 }

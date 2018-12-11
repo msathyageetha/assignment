@@ -2,11 +2,12 @@ package com.assignment.parser;
 
 import com.assignment.domain.StatementRecord;
 
+import java.io.File;
 import java.util.List;
 
 public abstract class InputParser {
 
-    public abstract List<StatementRecord> parseAndValidate(String fileName);
+    public abstract List<StatementRecord> parseAndValidate(File file);
 
 
     protected void validateEndBalance(StatementRecord statementRecord) {
